@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MyFlix • Video Grid</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Website sederhana bergaya Netflix. Klik poster untuk menonton videonya." />
+
+  <!-- Open Graph (preview WhatsApp/FB) -->
+  <meta property="og:title" content="MyFlix - Nonton Film Sederhana" />
+  <meta property="og:description" content="Website streaming sederhana bergaya Netflix.@biasaL4" />
+  <!-- Gambar OG HARUS URL absolut ke GitHub Pages kamu -->
+  <meta property="og:image" content="https://kasihterma-star.github.io/myflix/netflix_M.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kasihterma-star.github.io/myflix/" />
+
+  <!-- Favicon (ikon tab) -->
+  <link rel="icon" type="image/png" href="netflix_M.png" sizes="32x32">
+
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  <style>
+    .line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .poster::after{content:"";position:absolute;inset:0;transition:opacity .2s;opacity:0;background:linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,0))}
+    .poster:hover::after{opacity:.7}
+  </style>
+</head>
+<body class="bg-neutral-950 text-white">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-neutral-950/80 backdrop-blur border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
+      <div class="flex items-center gap-2">
+        <!-- Logo M -->
+        <svg width="28" height="28" viewBox="0 0 512 512" fill="currentColor" class="text-red-600 drop-shadow">
+          <path d="M80 80h80l96 240 96-240h80v352h-80V232l-96 240-96-240v200H80z"/>
+        </svg>
+        <span class="font-bold tracking-wide">MyFlix</span>
+      </div>
+
+      <!-- Ucapan / pengumuman -->
+      <div class="hidden sm:block text-sm text-red-300">
+        🎉 Selamat datang di MyFlix! Kecepatan loading tergantung perangkat & jaringan.
+      </div>
+
+      <!-- Search -->
+      <div class="ml-auto w-full max-w-md">
+        <label class="relative block">
+          <input id="searchBox" type="search" placeholder="Cari judul atau kategori…"
+                 class="w-full bg-neutral-900/80 border border-white/10 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-red-600/60" />
+          <svg class="absolute left-3 top-2.5" width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>
+          </svg>
+        </label>
+      </div>
+    </div>
+  </header>
+
+<!-- Tulisan Berjalan -->
+<div class="overflow-hidden whitespace-nowrap bg-red-600 text-white py-2">
+  <div class="animate-marquee inline-block px-4 font-semibold">
+    🎉 Selamat datang di MyFlix — Nonton film favoritmu gratis 🎬 | 
+    Update film terbaru setiap minggu! 🍿Kecepatan loading tergantung perangkat & jaringan anda 🙏🏻🙏🏻. 
+  </div>
+</div>
+
+<style>
+@keyframes marquee {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.animate-marquee {
+  display: inline-block;
+  animation: marquee 12s linear infinite;
+}
+</style>
+
+
+
+  <main class="max-w-7xl mx-auto px-4">
+    <!-- Hero Slideshow (auto ganti) -->
+    <section id="hero" class="relative mt-4 mb-6 overflow-hidden rounded-2xl min-h-[240px] sm:min-h-[320px] md:min-h-[420px]">
+      <div id="heroBg" class="absolute inset-0 bg-cover bg-center transition-[background-image] duration-700 ease-out"
+           style="background-image:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.7)),url('https://images.unsplash.com/photo-1522125670776-3c7abb882bc2?q=80&w=1600&auto=format&fit=crop');"></div>
+      <div class="relative z-10 p-6 sm:p-10 md:p-12 max-w-2xl">
+        <h1 id="heroTitle" class="text-2xl sm:text-3xl md:text-5xl font-bold drop-shadow">Tonton Apa Saja</h1>
+        <p id="heroDesc" class="mt-2 text-white/80">Klik poster di bawah untuk memutar video di tab baru.</p>
+        <div class="mt-4 flex gap-3">
+          <a id="heroPlay" href="#" target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-xl px-4 py-2 font-medium shadow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            Putar</a>
+          <a id="heroMore" href="#grid"
+             class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 rounded-xl px-4 py-2 font-medium">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6"/><path d="M6 20V10"/><path d="M18 20V4"/></svg>
+            Jelajahi</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kategori -->
+    <div class="mb-3 flex flex-wrap gap-2" id="chipBar"></div>
+<div id="yearFilter" class="flex flex-wrap gap-2 mt-2 hidden"></div>
+
+    <!-- Grid Poster -->
+    <section>
+      <h2 class="sr-only">Daftar Video</h2>
+      <div id="grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4"></div>
+    </section>
+
+    <footer class="py-10 text-center text-white/50 text-sm">
+      <div class="flex items-center justify-center gap-4">
+        <span>© <span id="year"></span> MyFlix (L4) — request film via IG</span>
+        <a href="https://www.instagram.com/my.flix_?" target="_blank" rel="noopener"
+           class="inline-flex items-center text-white/60 hover:text-pink-500" aria-label="Instagram">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+        </a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // === DATA ===
+    const videos = [
+      { title: "S Line - Season 1 Episode 1-6", year: 2025, url: "https://photos.app.goo.gl/qH2bRFYyokshJF4A6", thumb: "line.webp", category: "Fantasi, series" },
+      { title: "Jurassic World Rebirth ", year: 2025, url: "https://photos.app.goo.gl/ZoxuA25Hutkjbw8J8", thumb: "jurassic-rebirth.webp", category: "Fiksi" },
+      { title: "Ghost Train", year: 2025, url: "https://photos.app.goo.gl/an4dkSvBfRfJQwy78", thumb: "ghost-train.webp", category: "Marvel, Action" },
+      { title: "The Bad Guys 2", year: 2025, url: "https://photos.app.goo.gl/SukS1koyq1n1JcwJ9", thumb: "gusy.webp", category: "Animasi" },
+       { title: "Iron Man 3", year: 2013, url: "https://photos.app.goo.gl/uPS8d8R4ZTVAcrNS9", thumb: "iron-man-3.webp", category: "Marvel, Action" },
+      { title: "mission impossible", year: 2025, url: "https://photos.app.goo.gl/htjNvRGgwtMHpgpu8", thumb: "mission.webp", category: " Action" },
+      { title: "Iron Man 2", year: 2010, url: "https://photos.app.goo.gl/PY5k8wCkJASvDRYk6", thumb: "Iron-Man-2.webp", category: "Marvel, Action" },
+      { title: "Leprechaun The Beginning", year: 2025, url: "https://photos.app.goo.gl/psNcXAiaMQbmH1yaA", thumb: "Leprechaun.webp", category: "Horor" },
+      { title: "Dragon Nest: Warriors' Dawn", year: 2014, url: "https://photos.app.goo.gl/87beK3frL5tVaEQF7", thumb: "Dragon Nest.webp", category: "Animasi" },
+      { title: "Superman", year: 2025, url: "https://photos.app.goo.gl/WyR3JcvUzp9ixQt17", thumb: "Superman.webp", category: "Action" },
+      { title: "Avatar: The Way of Water", year: 2022, url: "https://photos.app.goo.gl/pHPKTPDchbJAuu6G8", thumb: "avatar2-600.webp", category: "Action,Fiksi " },
+      { title: "aashiqui-2", year: 2013, url: "https://photos.app.goo.gl/31NRiF7Lp95FEBFj7", thumb: "aashiqui-2.webp", category: "India" },
+      { title: "Elio", year: 2025, url: "https://photos.app.goo.gl/AVJoippW4goUkp868", thumb: "elio.webp", category: "Animasi" },
+      { title: "Iron Man 1", year: 2008, url: "https://photos.app.goo.gl/FzrS6s2unE9RernC7", thumb: "Iron Man.webp", category: "Marvel, Action" },
+      { title: "Avatar", year: 2009, url: "https://photos.app.goo.gl/td1ipB3vQLArbRFj8", thumb: "avatar.webp", category: "Fiksi, Action, Fantasi" },
+      { title: "Norma Antara Mertua dan Menantu", year: 2025, url: "https://photos.app.goo.gl/TMJdqp7PKRZSWwb39", thumb: "mertua.webp", category: "Fiktif, Indonesia" },
+      { title: "The wild Robot", year: 2024, url: "https://photos.app.goo.gl/7Au5KEtKmyTMJKds8", thumb: "robot1.webp", category: "Animasi" },
+      { title: "3 idiots ", year: 2009, url: "https://photos.app.goo.gl/K53AmQmRsEHGjV8z7", thumb: "3idiots-600.webp", category: "India" }
+    ];
+
+
+    // === Slideshow Hero ===
+    const heroBg = document.getElementById('heroBg');
+    const heroTitle = document.getElementById('heroTitle');
+    const heroDesc = document.getElementById('heroDesc');
+    const heroPlay = document.getElementById('heroPlay');
+
+    let heroIndex = 0;
+    const heroPool = videos.slice(0, 6);
+
+    function setHero(item){
+      try { heroBg.style.backgroundImage =
+        `linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.75)),url('${item.thumb}')`; } catch {}
+      heroTitle.textContent = item.title + (item.year ? ` (${item.year})` : "");
+      const cats = normCats(item.category);
+      heroDesc.textContent = cats.length ? `Kategori: ${cats.join(", ")}` : "Kategori: —";
+      heroPlay.href = item.url;
+    }
+    function nextHero(){ heroIndex = (heroIndex + 1) % heroPool.length; setHero(heroPool[heroIndex]); }
+    setHero(heroPool[heroIndex]);
+    let heroTimer = setInterval(nextHero, 5000);
+    const hero = document.getElementById('hero');
+    hero.addEventListener('mouseenter', () => clearInterval(heroTimer));
+    hero.addEventListener('mouseleave', () => heroTimer = setInterval(nextHero, 5000));
+
+    // === Kategori & Grid ===
+    const grid = document.getElementById('grid');
+    const searchBox = document.getElementById('searchBox');
+    const chipBar = document.getElementById('chipBar');
+
+    function normCats(cat){
+      // Terima string "Marvel, Action" atau array ["Marvel","Action"]
+      if (Array.isArray(cat)) return cat.map(s=>String(s).trim()).filter(Boolean);
+      return String(cat||"").split(",").map(s=>s.trim()).filter(Boolean);
+    }
+
+    const categories = ["Semua", ...Array.from(new Set(videos.flatMap(v => normCats(v.category))))];
+    let activeCategory = 'Semua';
+
+
+function toggleYears(){
+  const yearDiv = document.getElementById('yearFilter');
+  yearDiv.classList.toggle('hidden');
+  yearDiv.innerHTML = '';
+  const years = Array.from(new Set(videos.map(v => v.year))).sort();
+  years.forEach(y => {
+    const b = document.createElement('button');
+    b.className = 'px-3 py-1.5 rounded-full text-sm border border-white/10 bg-white/5 hover:bg-white/10 data-[active=true]:bg-red-600 data-[active=true]:border-red-600';
+    b.textContent = y;
+    if (String(y) === String(activeCategory)) b.setAttribute('data-active','true');
+    b.addEventListener('click', () => {
+      activeCategory = y;
+      renderChips();
+      render();
+      toggleYears();
+    });
+    yearDiv.appendChild(b);
+  });
+}
+
+
+    
+function renderChips(){
+  chipBar.innerHTML = '';
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'px-3 py-1.5 rounded-full text-sm border border-white/10 bg-white/5 hover:bg-white/10 data-[active=true]:bg-red-600 data-[active=true]:border-red-600';
+    btn.textContent = cat;
+    if (String(cat) === String(activeCategory)) btn.setAttribute('data-active','true');
+    btn.addEventListener('click', () => { 
+      activeCategory = cat; 
+      renderChips(); 
+      render(); 
+    });
+    chipBar.appendChild(btn);
+  });
+  const yearBtn = document.createElement('button');
+  yearBtn.className = 'px-3 py-1.5 rounded-full text-sm border border-white/10 bg-white/5 hover:bg-white/10';
+  yearBtn.textContent = 'Tahun ⏷';
+  yearBtn.addEventListener('click', toggleYears);
+  chipBar.appendChild(yearBtn);
+}
+
+
+    function posterCard(item){
+      const a = document.createElement('a');
+      a.href = item.url; a.target = '_blank'; a.rel = 'noopener';
+      a.className = 'group relative rounded-2xl overflow-hidden block focus:outline-none focus:ring-2 focus:ring-red-600/60';
+
+      const img = document.createElement('img');
+      img.src = item.thumb; img.alt = item.title; img.loading = 'lazy';
+      img.className = 'w-full aspect-[2/3] object-cover';
+
+      const overlay = document.createElement('div');
+      overlay.className = 'poster absolute inset-0';
+
+      const badge = document.createElement('div');
+      badge.className = 'absolute left-2 top-2 text-[11px] bg-black/70 rounded-md px-2 py-1';
+      const cats = normCats(item.category);
+      badge.textContent = cats.join(", ") || 'Video';
+
+      const play = document.createElement('div');
+      play.className = 'absolute inset-x-0 bottom-0 p-3 flex items-center gap-2 translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition';
+      play.innerHTML = '<div class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-600 shadow"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div><div class="font-medium">Putar</div>';
+
+      const title = document.createElement('div');
+      title.className = 'mt-2 text-sm font-medium line-clamp-2 text-white/90';
+      title.textContent = item.title + (item.year ? ` (${item.year})` : "");
+
+      const wrapper = document.createElement('div');
+      a.append(img, overlay, badge, play);
+      wrapper.append(a, title);
+      return wrapper;
+    }
+
+    function render(){
+      const q = (searchBox.value || '').toLowerCase().trim();
+      let list = videos.slice();
+      if(activeCategory !== 'Semua') list = list.filter(v => normCats(v.category).includes(activeCategory) || String(v.year) === String(activeCategory));
+      if(q) list = list.filter(v => (v.title + ' ' + normCats(v.category).join(' ')).toLowerCase().includes(q));
+
+      grid.innerHTML = '';
+      list.forEach(item => grid.appendChild(posterCard(item)));
+    }
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderChips();
+    render();
+    searchBox.addEventListener('input', render);
+  </script>
+</body>
+</html>
