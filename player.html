@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+
+<script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+
+<style>
+
+body{
+
+margin:0;
+
+background:black;
+
+}
+
+.controls{
+
+position:fixed;
+
+top:10px;
+
+left:10px;
+
+z-index:10;
+
+}
+
+button{
+
+background:#0ea5e9;
+
+border:none;
+
+padding:8px 14px;
+
+margin-right:5px;
+
+border-radius:6px;
+
+color:white;
+
+cursor:pointer;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="controls">
+
+<button onclick="prevEp()">Prev</button>
+
+<button onclick="nextEp()">Next</button>
+
+</div>
+
+<video id="player" controls autoplay style="width:100%;height:100vh;"></video>
+
+<script>
+
+const params=new URLSearchParams(location.search);
+
+let ep=parseInt(params.get("ep"));
+
+function buildUrl(ep){
+
+let num=String(ep).padStart(2,'0');
+
+let url="https://film.myflixnibosss.my.id/videos/naruto kecil/[Kusonime] Naruto - "+num+".mkv";
+
+return encodeURI(url);
+
+}
+
+const player=new Plyr("#player");
+
+function loadEpisode(){
+
+player.source={
+
+type:"video",
+
+sources:[{
+
+src:buildUrl(ep),
+
+type:"video/x-matroska"
+
+}]
+
+};
+
+}
+
+function nextEp(){
+
+ep++;
+
+loadEpisode();
+
+}
+
+function prevEp(){
+
+if(ep>1){
+
+ep--;
+
+loadEpisode();
+
+}
+
+}
+
+loadEpisode();
+
+</script>
+
+</body>
+</html>
