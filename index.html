@@ -1,142 +1,184 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>MyFlix</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
 @keyframes fadeIn {
-  from {opacity:0; transform:scale(.95);}
-  to {opacity:1; transform:scale(1);}
+from {opacity:0; transform:scale(.95);}
+to {opacity:1; transform:scale(1);}
 }
+
 .modal-animate{
-  animation:fadeIn .2s ease-out;
+animation:fadeIn .2s ease-out;
 }
 </style>
+
 </head>
 
 <body class="bg-neutral-950 text-white">
 
-<header class="sticky top-0 z-40 bg-neutral-950/80 backdrop-blur border-b border-white/5">
-  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
-    <svg width="28" height="28" viewBox="0 0 512 512" fill="currentColor" class="text-sky-500">
-      <path d="M80 80h80l96 240 96-240h80v352h-80V232l-96 240-96-240v200H80z"/>
-    </svg>
-    <span class="font-bold text-lg">MyFlix</span>
-  </div>
+<header class="sticky top-0 bg-neutral-950 border-b border-white/10">
+
+<div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
+
+<span class="font-bold text-lg text-sky-400">MyFlix</span>
+
+</div>
+
 </header>
 
 <main class="max-w-7xl mx-auto px-4 py-6">
-  <div id="grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+
+<div id="grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+
 </main>
 
-<!-- MODAL -->
 <div id="modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
-  <div class="bg-neutral-900 rounded-2xl w-full max-w-md p-5 relative modal-animate">
-    
-    <button onclick="closeModal()" class="absolute top-3 right-3 text-white/60 hover:text-white text-lg">✕</button>
-    
-    <h2 id="modalTitle" class="text-lg font-semibold mb-4"></h2>
-    
-    <div id="episodeList" class="max-h-64 overflow-y-auto space-y-2 pr-2">
-      <!-- Episode buttons here -->
-    </div>
 
-  </div>
+<div class="bg-neutral-900 rounded-2xl w-full max-w-md p-5 relative modal-animate">
+
+<button onclick="closeModal()" class="absolute top-3 right-3 text-white/60 hover:text-white text-lg">✕</button>
+
+<h2 id="modalTitle" class="text-lg font-semibold mb-4"></h2>
+
+<div id="episodeList" class="max-h-64 overflow-y-auto space-y-2 pr-2"></div>
+
+</div>
+
 </div>
 
 <script>
-const videos = [
-  {
-    title: "NARUTO",
-    year: 2007,
-    thumb: "https://upload.wikimedia.org/wikipedia/id/9/94/NarutoCoverTankobon1.jpg",
-   episodes: [
-  { ep: 1, url: "https://im.myflixnibosss.my.id/s/EP%201" },
-  { ep: 2, url: "https://im.myflixnibosss.my.id/s/2" },
-  { ep: 3, url: "https://link-episode-3-anda.com" },
-  { ep: 4, url: "https://link-episode-4-anda.com" },
-  { ep: 6, url: "https://link-episode-5-anda.com" },
-  { ep: 7, url: "https://link-episode-1-anda.com" },
-  { ep: 8, url: "https://link-episode-2-anda.com" },
-  { ep: 9, url: "https://link-episode-3-anda.com" },
-  { ep: 10, url: "https://link-episode-4-anda.com" },
-  { ep: 5, url: "https://link-episode-5-anda.com" },
-  { ep: 1, url: "https://link-episode-1-anda.com" },
-  { ep: 2, url: "https://link-episode-2-anda.com" },
- 
-]
-  },
- ];
 
-const grid = document.getElementById("grid");
-const modal = document.getElementById("modal");
-const modalTitle = document.getElementById("modalTitle");
-const episodeList = document.getElementById("episodeList");
+function generateEpisodes(total){
+
+let list=[];
+
+for(let i=1;i<=total;i++){
+
+let num=String(i).padStart(2,'0');
+
+let url="https://film.myflixnibosss.my.id/videos/naruto kecil/[Kusonime] Naruto - "+num+".mkv";
+
+list.push({ep:i,url:url});
+
+}
+
+return list;
+
+}
+
+const videos=[
+
+{
+
+title:"NARUTO",
+
+year:2007,
+
+thumb:"https://upload.wikimedia.org/wikipedia/id/9/94/NarutoCoverTankobon1.jpg",
+
+episodes:generateEpisodes(220)
+
+}
+
+];
+
+const grid=document.getElementById("grid");
+const modal=document.getElementById("modal");
+const modalTitle=document.getElementById("modalTitle");
+const episodeList=document.getElementById("episodeList");
 
 function createCard(item){
-  const card = document.createElement("div");
-  card.className = "cursor-pointer";
 
-  card.innerHTML = `
-    <div class="rounded-2xl overflow-hidden bg-neutral-900 shadow-lg hover:scale-105 transition">
-      <img src="${item.thumb}" class="w-full aspect-[2/3] object-cover">
-      <div class="p-3">
-        <h3 class="text-sm font-semibold">${item.title} (${item.year})</h3>
-      </div>
-    </div>
-  `;
+const card=document.createElement("div");
 
-  card.onclick = () => openModal(item);
+card.className="cursor-pointer";
 
-  return card;
+card.innerHTML=`
+
+<div class="rounded-2xl overflow-hidden bg-neutral-900 hover:scale-105 transition">
+
+<img src="${item.thumb}" class="w-full aspect-[2/3] object-cover">
+
+<div class="p-3">
+
+<h3 class="text-sm font-semibold">${item.title} (${item.year})</h3>
+
+</div>
+
+</div>
+
+`;
+
+card.onclick=()=>openModal(item);
+
+return card;
+
 }
 
 function openModal(item){
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
 
-  modalTitle.textContent = item.title + " (" + item.year + ")";
-  episodeList.innerHTML = "";
+modal.classList.remove("hidden");
 
-  if(item.episodes){
-    item.episodes.forEach(e=>{
-      const btn = document.createElement("a");
-      btn.href = e.url;
-      btn.target = "_blank";
-      btn.className = "block w-full text-center bg-sky-500 hover:bg-sky-600 py-2 rounded-lg text-sm";
-      btn.textContent = "Episode " + e.ep;
-      episodeList.appendChild(btn);
-    });
-  } else {
-    const btn = document.createElement("a");
-    btn.href = item.url;
-    btn.target = "_blank";
-    btn.className = "block w-full text-center bg-sky-500 hover:bg-sky-600 py-2 rounded-lg text-sm";
-    btn.textContent = "Putar Film";
-    episodeList.appendChild(btn);
-  }
+modal.classList.add("flex");
+
+modalTitle.textContent=item.title+" ("+item.year+")";
+
+episodeList.innerHTML="";
+
+item.episodes.forEach(e=>{
+
+const btn=document.createElement("a");
+
+btn.href="player.html?ep="+e.ep;
+
+btn.target="_blank";
+
+btn.className="block w-full text-center bg-sky-500 hover:bg-sky-600 py-2 rounded-lg text-sm";
+
+btn.textContent="Episode "+e.ep;
+
+episodeList.appendChild(btn);
+
+});
+
 }
 
 function closeModal(){
-  modal.classList.add("hidden");
-  modal.classList.remove("flex");
+
+modal.classList.add("hidden");
+
+modal.classList.remove("flex");
+
 }
 
-window.onclick = function(e){
-  if(e.target === modal){
-    closeModal();
-  }
+window.onclick=function(e){
+
+if(e.target===modal){
+
+closeModal();
+
+}
+
 }
 
 function render(){
-  grid.innerHTML = "";
-  videos.forEach(v=>grid.appendChild(createCard(v)));
+
+grid.innerHTML="";
+
+videos.forEach(v=>grid.appendChild(createCard(v)));
+
 }
 
 render();
+
 </script>
 
 </body>
